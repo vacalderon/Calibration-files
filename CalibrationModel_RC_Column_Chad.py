@@ -13,7 +13,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from LibUnitsMUS import *
 import ManderCC
-from __main__ import *
 
 
 
@@ -91,7 +90,7 @@ c = 1.25 * inch  # Column cover to reinforcing steel NA.
 numBarsSec = 16  # number of uniformly-distributed longitudinal-reinforcement bars
 barAreaSec = 0.60 * in2  # area of longitudinal-reinforcement bars
 dbl = (7/8) * inch
- 
+
 
 # Transverse Steel Properties
 fyt = 574.0 * ksi  # Yield Stress of Transverse Steel
@@ -143,7 +142,7 @@ SPb=0.45
 SPR=1.01
 
 
-#uniaxialMaterial StrPen01   Tag  fy  sy fu su b  R  
+#uniaxialMaterial StrPen01   Tag  fy  sy fu su b  R
 uniaxialMaterial('Bond_SP01',IDSP, Fy,SPsy,Fu,SPsu,SPb,SPR)
 
 # Writing Material data to file
@@ -153,7 +152,7 @@ matfile.close
 
 #-------------------------------------------------------------------------
 #               DEFINE PLASTICE HIGE PROPERTIES
-#-------------------------------------------------------------------------    
+#-------------------------------------------------------------------------
 
 k=0.2*(Fu/Fy - 1)
 if k > 0.08:
@@ -223,13 +222,12 @@ element('forceBeamColumn', ColeleTag, 2, 3, ColTransfTag, ColIntTag, '-mass', 0.
 recorder('Node', '-file','DFree.out', '-time','-node', 3, '-dof', 1, 2, 3, 'disp')
 recorder('Node', '-file','/DBase.out', '-time', '-node', 1, '-dof', 1, 2, 3, 'disp')
 recorder('Node', '-file', 'RBase.out', '-time', '-node', 2, '-dof', 1, 2, 3, 'reaction')
-recorder('Element', '-file', 'StressStrain.out', '-time','-ele', 2, 'section', '1', 'fiber', str(Rbl)+', 0.0','mat','3','stressStrain')  #Rbl,0, IDreinf
-recorder('Element', '-file', 'StressStrain2.out','-time','-ele', 2, 'section', '1', 'fiber', str(-Dprime)+', 0.0','mat','1','stressStrain')  #Rbl,0, IDreinf
-recorder('Element', '-file', 'StressStrain3.out','-time','-ele', 2, 'section', '1', 'fiber', str(-DCol)+', 0.0','mat','2','stressStrain')
-steelstrain = eleResponse( 2, 'section', '1', 'fiber', '10.03125','0', '3', 'stress')
+recorder('Element', '-file', 'StressStrain.out', '-time','-ele', 2, 'section', '1', 'fiber', str(Rbl), '0.0','3','stressStrain')  #Rbl,0, IDreinf
+recorder('Element', '-file', 'StressStrain2.out','-time','-ele', 2, 'section', '1', 'fiber', str(-Dprime),'0.0','1','stressStrain')  #Rbl,0, IDreinf
+recorder('Element', '-file', 'StressStrain3.out','-time','-ele', 2, 'section', '1', 'fiber', str(-DCol), '0.0','2','stressStrain')
 # recorder('Element', '-file', datadir+'Data-2c/DCol.out','-time', '-ele', 1, 'deformations')
 
-#------------------------------------------------------------------------------ 
+#------------------------------------------------------------------------------
 #|                      DISPLACEMENT CONTROL RUN
 #------------------------------------------------------------------------------
 
@@ -252,7 +250,7 @@ analysis('Static') # define type of analysis static or transient
 analyze(NstepGravity) # apply gravity
 
 loadConst('-time', 0.0) #maintain constant gravity loads and reset time to zero
- 
+
 #applying Dynamic Ground motion analysis
 timeSeries('Linear', 2)
 pattern('Plain', 2, 2)
@@ -276,8 +274,8 @@ disp=[]
 for i in range(0,4):
     pdisp.append((i+1)*0.25*dy1)
     pdisp.append(-(i+1)*0.25*dy1)
-    
-    
+
+
 for i in range(2,5):
     disp.append(i*dy/2)
     disp.append(-i*dy/2)
@@ -285,17 +283,17 @@ for i in range(2,5):
     disp.append(-i*dy/2)
     disp.append(i*dy/2)
     disp.append(-i*dy/2)
-    
-    
+
+
 for i in range (3,ddmax+1):
     disp.append(i*dy)
     disp.append(-i*dy)
     disp.append(i*dy)
     disp.append(-i*dy)
     disp.append(i*dy)
-    disp.append(-i*dy)    
-    
-    
+    disp.append(-i*dy)
+
+
 TolStatic=1e-6
 maxNumIterStatic=6
 testTypeStatic='EnergyIncr'
@@ -312,21 +310,21 @@ for xdisp in pdisp:
     dD=netdisp/nIncres
     integrator('DisplacementControl',3,1,dD)
     analysis('Static')
-    ok=analyze(nIncres)       
-    
+    ok=analyze(nIncres)
+
     for j in Algorithm:
-        
+
 
         if ok != 0:
             if j < 4:
                 algorithm(Algorithm[j], '-initial')
-                
+
             else:
                 algorithm(Algorithm[j])
-                
+
             test(testTypeStatic, TolStatic, maxNumIterStatic)
             ok = analyze(1)
-            algorithm(algorithTypeStatic)                            
+            algorithm(algorithTypeStatic)
             if ok == 0:
                 break
         else:
@@ -334,29 +332,29 @@ for xdisp in pdisp:
     stDisp=xdisp
     u3 = nodeDisp(3, 1)
     print(u3)
-    
-    
+
+
 for xdisp in disp:
     count=count+1
     netdisp=xdisp-stDisp
     dD=netdisp/nIncres
     integrator('DisplacementControl',3,1,dD)
     analysis('Static')
-    ok=analyze(nIncres)       
-    
+    ok=analyze(nIncres)
+
     for j in Algorithm:
-        
+
 
         if ok != 0:
             if j < 4:
                 algorithm(Algorithm[j], '-initial')
-                
+
             else:
                 algorithm(Algorithm[j])
-                
+
             test(testTypeStatic, TolStatic, maxNumIterStatic)
             ok = analyze(5)
-            algorithm(algorithTypeStatic)                            
+            algorithm(algorithTypeStatic)
             if ok == 0:
                 break
         else:
@@ -369,8 +367,8 @@ for xdisp in disp:
 
 
 #Force Displacement Plot
-    
-    
+
+
 d=open("DFree.out")
 F=open("RBase.out")
 
@@ -383,7 +381,7 @@ y = [line.split()[0] for line in linesf]
 X=[float(i) for i in x]
 Y=[float(i) for i in y]
 
-plt.figure(2)    
+plt.figure(2)
 plt.plot(X,Y[0:24889])
 plt.title('Example for ChiChi EQ w/c=0.4', fontsize=32)
 plt.xlabel('Diplacement (in)', fontsize=24)
