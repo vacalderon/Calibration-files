@@ -246,7 +246,7 @@ recorder('Node', '-file','DFree.out', '-time','-node', 3, '-dof', 1, 2, 3, 'disp
 recorder('Node', '-file','/DBase.out', '-time', '-node', 1, '-dof', 1, 2, 3, 'disp')
 recorder('Node', '-file', 'RBase.out', '-time', '-node', 2, '-dof', 1, 2, 3, 'reaction')
 recorder('Element', '-file', 'StressStrain.out', '-time','-ele', 2, 'section', '1', 'fiber', str(Rbl), '0.0','3','stressStrain')
-
+response=eleResponse(2, 'section', 1, 'fiber', Rbl, 0.0,3,'stressStrain')
 #------------------------------------------------------------------------------
 #|                      NLTH Analysis Run
 #------------------------------------------------------------------------------

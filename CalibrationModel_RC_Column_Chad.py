@@ -11,6 +11,7 @@ from openseespy.opensees import *
 import math
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
 from LibUnitsMUS import *
 import ManderCC
 
@@ -367,7 +368,13 @@ for xdisp in disp:
 
 
 #Force Displacement Plot
+# Loading results from Chad's test
 
+test_data = pd.read_csv('Colum26_Goodnight.csv')
+
+test_d = list(test_data['displacement'])
+test_f = list(test_data['force'])
+# data from analysis
 
 d=open("DFree.out")
 F=open("RBase.out")
@@ -381,14 +388,26 @@ y = [line.split()[0] for line in linesf]
 X=[float(i) for i in x]
 Y=[float(i) for i in y]
 
-plt.figure(2)
-plt.plot(X,Y[0:24889])
-plt.title('Example for ChiChi EQ w/c=0.4', fontsize=32)
-plt.xlabel('Diplacement (in)', fontsize=24)
-plt.ylabel('BaseShear (kip)', fontsize=24)
-plt.tick_params(direction='out',axis='both',labelsize=20)
+#plotting commands
+linestyle_str = ['solid', 'dotted','dashed','dashdot',(0, (3, 5, 1, 5, 1, 5))] 
+plt.rcParams.update({'font.family':'serif'})
+plt.rcParams.update({'font.serif':'Times New Roman'})
+colors = ['#d94545','#519872','#73a8d4','#f7b76d','#545066']
+
+
+plt.figure(2,figsize=(5,4))
+plt.plot(X,Y[0:24889],color='#73a8d4',linestyle='dashed')
+plt.plot(test_d,test_f,color='#d94545',linestyle='solid')
+plt.xlim(-7,7)
+plt.ylim(-100,100)
+plt.xlabel('Diplacement (in)', fontsize=11)
+plt.ylabel('BaseShear (kip)', fontsize=11)
+plt.tick_params(direction='out',axis='both',labelsize=10)
+plt.legend(['StructuralModel','Pristine Column Test'],edgecolor='black',loc='upper left')
 plt.grid()
 plt.show()
+
+plt.savefig("Calibration_Test_26_Goodnight_et_al.pdf",dpi=600,bbox_inches='tight', pad_inches=0)
 
 ##Steel Stress Strain Analysis
 #
