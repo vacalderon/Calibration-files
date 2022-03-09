@@ -1,0 +1,2 @@
+ID,earthquake,pga_(g),CorrosionLvl_Long,CorrosionLvl_Trans,First_Period_s,Steel_Strain,Conf_Conc_Strain,Unc_Conc_srain,Fy_ksi,fyt_ksi,Ast_in2,st_in,Dprime_in,PCol_kip,DCol_in,barAreaSec_in2,fc_ksi,LimitState_ConcreteCoverCrushing,ConfinementSteelYielding,LongitudinlSteelBuckling,"Effective period, Teff",Force,MaxDisplacement at MaxForce,SD_at_Teff,SD_Teff_xi,rhol,rhov,ALR,height_of_col,long_bar_diameter,ServciabilitySteel,ServiciabilityConcrete,DamageControlSteel,DamageControlConcrete,Ultiamte Steel,Ductility
+

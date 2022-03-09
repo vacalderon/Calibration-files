@@ -84,8 +84,8 @@ IDSP    = 4  # material ID tag -- Strain Penetration
 
 CL = 0.095
 
-Fy = 375 * MPa * (1-0.021*CL) # STEEL yield stress
-Fu = 572.3 * MPa * (1-0.021*CL) # Steel Ultimate Stress
+Fy = 375 * MPa * (1-0.0075*CL*100) # STEEL yield stress
+Fu = 572.3 * MPa * (1-0.0075*CL*100) # Steel Ultimate Stress
 Es = 290000.0 * MPa  # modulus of steel
 Bs = 0.01  # strain-hardening ratio
 R0 = 20.0  # control the transition from elastic to plastic branches
@@ -93,9 +93,8 @@ cR1 = 0.925  # control the transition from elastic to plastic branches
 cR2 = 0.15  # control the transition from elastic to plastic branches
 c = 30 * mm  # Column cover to reinforcing steel NA.
 numBarsSec = 8  # number of uniformly-distributed longitudinal-reinforcement bars
-barAreaSec = 200 * mm2 *(1-CL)  # area of longitudinal-reinforcement bars
-dbl = (barAreaSec*4/math.pi)**0.5
- 
+dbl = 15.2*mm
+barAreaSec = 0.25*math.pi*dbl**2
 
 # Transverse Steel Properties
 fyt = 375 * MPa  # Yield Stress of Transverse Steel
@@ -225,7 +224,7 @@ element('forceBeamColumn', ColeleTag, 2, 3, ColTransfTag, ColIntTag, '-mass', 0.
 recorder('Node', '-file','DFree.out', '-time','-node', 3, '-dof', 1, 2, 3, 'disp')
 recorder('Node', '-file','/DBase.out', '-time', '-node', 1, '-dof', 1, 2, 3, 'disp')
 recorder('Node', '-file', 'RBase.out', '-time', '-node', 2, '-dof', 1, 2, 3, 'reaction')
-recorder('Element', '-file', 'StressStrain.out', '-time','-ele', 2, 'section', '1', 'fiber', str(Rbl)+', 0.0','mat','3','stressStrain')  #Rbl,0, IDreinf
+recorder('Element', '-file', 'StressStrain.out', '-time','-ele', 2, 'section', '1', 'fiber', str(-Rbl)+', 0.0','mat','3','stressStrain')  #Rbl,0, IDreinf
 recorder('Element', '-file', 'StressStrain2.out','-time','-ele', 2, 'section', '1', 'fiber', str(-Dprime)+', 0.0','mat','1','stressStrain')  #Rbl,0, IDreinf
 recorder('Element', '-file', 'StressStrain3.out','-time','-ele', 2, 'section', '1', 'fiber', str(-DCol)+', 0.0','mat','2','stressStrain')
 # recorder('Element', '-file', datadir+'Data-2c/DCol.out','-time', '-ele', 1, 'deformations')
